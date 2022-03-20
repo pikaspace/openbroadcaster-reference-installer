@@ -26,6 +26,9 @@ read fqdn
 echo  "What email address should OpenBroadcaster emails come from?"
 read email
 
+echo "Which email address to use for Let's Encrypt notifications?"
+read certemail
+
 echo "Here we go!
 "
 
@@ -40,6 +43,7 @@ ufw allow http
 ufw allow https
 snap install --classic certbot
 rm /etc/nginx/sites-enabled/default
+rm /etc/php/8.0/fpm/pool.d/www.conf
 
 apt -y install mariadb-server
 mysql_secure_installation << EOF
@@ -78,7 +82,7 @@ echo "
 [ob]
 user = ob
 group = ob
-listen = /run/php/php8.0-ob-fpm.sock
+listen = /var/run/php/php8.0-ob-fpm.sock
 listen.owner = www-data
 listen.group = www-data
 pm = dynamic
@@ -90,6 +94,12 @@ pm.max_spare_servers = 3
 
 useradd -m --shell /bin/bash ob
 mkdir /home/ob/www/
+
+systemctl restart php8.0-fpm
+systemctl restart nginx
+
+certbot --nginx -d $fqdn --agree-tos --no-eff-email -m $certemail
+
 cd /home/ob/www/
 git clone https://github.com/openbroadcaster/server.git ./
 git checkout testing
@@ -99,7 +109,8 @@ obpass=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)
 obhash=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)
 
 mysql -e "CREATE DATABASE ob"
-mysql -e "CREATE USER `ob`@localhost IDENTIFIED BY '$sqlpass'"
+mysql -e "CREATE USER ob@localhost IDENTIFIED BY '$sqlpass'"
+mysql -e "GRANT ALL PRIVILEGES ON ob.* TO ob@localhost"
 mysql ob < /home/ob/www/db/dbclean.sql
 
 echo "<?php
@@ -112,7 +123,7 @@ define('OB_MEDIA','/home/ob/files/media');
 define('OB_MEDIA_UPLOADS','/home/ob/files/media/uploads');
 define('OB_MEDIA_ARCHIVE','/home/ob/files/media/archive');
 define('OB_CACHE','/home/ob/files/cache');
-define('OB_SITE','http://$fqdn/'); // where do you access OB?
+define('OB_SITE','https://$fqdn/'); // where do you access OB?
 define('OB_EMAIL_REPLY','$email'); // emails to users come from this address
 define('OB_EMAIL_FROM','OpenBroadcaster'); // emails to users come from this name
 " > /home/ob/www/config.php
@@ -122,8 +133,13 @@ mkdir /home/ob/files/media
 mkdir /home/ob/files/media/uploads
 mkdir /home/ob/files/media/archive
 mkdir /home/ob/files/cache
+mkdir /home/ob/www/assets
+mkdir /home/ob/www/assets/uploads
 chown -R ob:ob /home/ob/files
 chown -R ob:ob /home/ob/www
+
+sudo -u ob php /home/ob/www/updates/index.php force-update
+sudo -u ob php /home/ob/www/tools/password_change.php admin $obpass
 
 echo
 echo http://$fqdn/
