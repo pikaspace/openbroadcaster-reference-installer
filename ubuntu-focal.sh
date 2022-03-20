@@ -39,6 +39,10 @@ apt -y upgrade
 
 apt -y install nginx php8.0 php8.0-fpm php8.0-curl php8.0-gd php8.0-mbstring php8.0-mysql php8.0-xml php8.0-imagick php8.0-zip php8.0-bcmath php8.0-intl
 
+apt -y install ffmpeg vorbis-tools festival imagemagick
+ln -s /usr/bin/ffmpeg /usr/local/bin/avconv
+ln -s /usr/bin/ffprobe /usr/local/bin/avprobe
+
 ufw allow http
 ufw allow https
 snap install --classic certbot
