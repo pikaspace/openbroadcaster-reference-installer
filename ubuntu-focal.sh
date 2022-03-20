@@ -23,6 +23,9 @@ fi
 echo  "What is the FQDN? I.e., ob.example.com. Do not include http://, https://, or trailing slash."
 read fqdn
 
+echo  "What email address should OpenBroadcaster emails come from?"
+read email
+
 echo "Here we go!
 "
 
@@ -85,21 +88,47 @@ pm.min_spare_servers = 1
 pm.max_spare_servers = 3
 " > /etc/php/8.0/fpm/pool.d/ob.conf
 
-useradd --shell /bin/bash ob
+useradd -m --shell /bin/bash ob
 mkdir /home/ob/www/
 cd /home/ob/www/
 git clone https://github.com/openbroadcaster/server.git ./
 git checkout testing
 
-mysql -e "CREATE DATABASE ob"
-mysql ob < /home/ob/www/db/db_clean.sql
-
 sqlpass=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)
 obpass=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)
 obhash=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)
+
+mysql -e "CREATE DATABASE ob"
+mysql -e "CREATE USER `ob`@localhost IDENTIFIED BY '$sqlpass'"
+mysql ob < /home/ob/www/db/dbclean.sql
+
+echo "<?php
+define('OB_DB_USER','ob');
+define('OB_DB_PASS','$sqlpass');
+define('OB_DB_HOST','localhost');
+define('OB_DB_NAME','ob');
+define('OB_HASH_SALT','$obhash');
+define('OB_MEDIA','/home/ob/files/media');
+define('OB_MEDIA_UPLOADS','/home/ob/files/media/uploads');
+define('OB_MEDIA_ARCHIVE','/home/ob/files/media/archive');
+define('OB_CACHE','/home/ob/files/cache');
+define('OB_SITE','http://$fqdn/'); // where do you access OB?
+define('OB_EMAIL_REPLY','$email'); // emails to users come from this address
+define('OB_EMAIL_FROM','OpenBroadcaster'); // emails to users come from this name
+" > /home/ob/www/config.php
+
+mkdir /home/ob/files
+mkdir /home/ob/files/media
+mkdir /home/ob/files/media/uploads
+mkdir /home/ob/files/media/archive
+mkdir /home/ob/files/cache
+chown -R ob:ob /home/ob/files
+chown -R ob:ob /home/ob/www
 
 echo
 echo http://$fqdn/
 echo Username: admin
 echo Password: $obhash
 echo
+
+cd /home/ob/www
