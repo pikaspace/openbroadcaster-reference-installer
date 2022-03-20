@@ -64,6 +64,8 @@ echo "server {
 
   root /home/ob/www;
   index index.php;
+  
+  client_max_body_size 1024m;
 
   location ~ /\.(?!well-known).* {
     deny all;
@@ -94,6 +96,8 @@ pm.max_children = 5
 pm.start_servers = 2
 pm.min_spare_servers = 1
 pm.max_spare_servers = 3
+php_value[upload_max_filesize] = 1024M
+php_value[post_max_size] = 1024M
 " > /etc/php/8.0/fpm/pool.d/ob.conf
 
 useradd -m --shell /bin/bash ob
