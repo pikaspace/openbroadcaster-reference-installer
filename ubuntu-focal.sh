@@ -9,6 +9,9 @@ echo "
 This script is designed to be run on a fresh Ubuntu Server 20.04 installation.
 Running on an existing installation or different operating system / release may
 provide unexpected results.
+
+This script is in an alpha state and does not validate user inputs or
+command exit codes for success/failure. Things might break.
 "
 
 read -p "Are you sure you want to do this? Type install: " confirmation
