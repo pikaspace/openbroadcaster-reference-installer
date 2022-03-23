@@ -155,7 +155,7 @@ sudo -u ob php /home/ob/www/tools/password_change.php admin $obpass
 echo
 echo http://$fqdn/
 echo Username: admin
-echo Password: $obhash
+echo Password: $obpass
 echo
 
 cd /home/ob/www
