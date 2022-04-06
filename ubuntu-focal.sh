@@ -49,6 +49,7 @@ ln -s /usr/bin/ffprobe /usr/local/bin/avprobe
 ufw allow http
 ufw allow https
 snap install --classic certbot
+systemctl enable nginx
 rm /etc/nginx/sites-enabled/default
 rm /etc/php/8.0/fpm/pool.d/www.conf
 
