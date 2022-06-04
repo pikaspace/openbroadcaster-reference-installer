@@ -113,8 +113,8 @@ systemctl restart nginx
 certbot --nginx -d $fqdn --agree-tos --no-eff-email -m $certemail
 
 cd /home/ob/www/
-git clone https://github.com/openbroadcaster/server.git ./
-git checkout testing
+git clone https://github.com/openbroadcaster/observer.git ./
+git checkout 5.3
 
 sqlpass=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)
 obpass=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)
@@ -154,7 +154,7 @@ sudo -u ob php /home/ob/www/updates/index.php force-update
 sudo -u ob php /home/ob/www/tools/password_change.php admin $obpass
 
 echo
-echo http://$fqdn/
+echo https://$fqdn/
 echo Username: admin
 echo Password: $obpass
 echo
