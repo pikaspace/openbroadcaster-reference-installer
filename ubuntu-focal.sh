@@ -29,8 +29,22 @@ read fqdn
 echo  "What email address should OpenBroadcaster emails come from?"
 read email
 
-echo "Which email address to use for Let's Encrypt notifications?"
-read certemail
+https=invalid
+while [ "$https" != "yes" -a "$https" != "no" ]; do
+  if [ "$https" == "yes" ]; then
+    https=1
+  elif [ "$https" == "no" ]; then
+    https=0
+  else
+    echo "Do you want to use HTTPs (with Let's Encrypt)? (yes or no)"
+    read https
+  fi;
+done
+
+if [ "$https" == "yes" ]; then
+  echo "Which email address to use for Let's Encrypt notifications?"
+  read certemail
+fi;
 
 echo "Here we go!
 "
@@ -55,8 +69,12 @@ ln -s /usr/bin/ffmpeg /usr/local/bin/avconv
 ln -s /usr/bin/ffprobe /usr/local/bin/avprobe
 
 ufw allow http
-ufw allow https
-snap install --classic certbot
+
+if [ "$https" == "yes" ]; then
+  ufw allow https
+  snap install --classic certbot
+fi;
+
 systemctl enable nginx
 rm /etc/nginx/sites-enabled/default
 rm /etc/php/8.0/fpm/pool.d/www.conf
@@ -118,7 +136,9 @@ mkdir /home/ob/www/
 systemctl restart php8.0-fpm
 systemctl restart nginx
 
-certbot --nginx -d $fqdn --agree-tos --no-eff-email -m $certemail
+if [ "$https" == "yes" ]; then
+  certbot --nginx -d $fqdn --agree-tos --no-eff-email -m $certemail
+fi
 
 cd /home/ob/www/
 git clone https://github.com/openbroadcaster/observer.git ./
@@ -146,10 +166,15 @@ define('OB_MEDIA','/home/ob/files/media');
 define('OB_MEDIA_UPLOADS','/home/ob/files/media/uploads');
 define('OB_MEDIA_ARCHIVE','/home/ob/files/media/archive');
 define('OB_CACHE','/home/ob/files/cache');
-define('OB_SITE','https://$fqdn/'); // where do you access OB?
 define('OB_EMAIL_REPLY','$email'); // emails to users come from this address
 define('OB_EMAIL_FROM','OpenBroadcaster'); // emails to users come from this name
 " > /home/ob/www/config.php
+
+if [ "$https" == "yes" ]; then
+  echo "define('OB_SITE','https://$fqdn/'); // where do you access OB?" >> /home/ob/www/config.php
+else
+  echo "define('OB_SITE','http://$fqdn/'); // where do you access OB?" >> /home/ob/www/config.php
+fi
 
 mkdir /home/ob/files
 mkdir /home/ob/files/media
@@ -165,7 +190,13 @@ sudo -u ob php /home/ob/www/updates/index.php run
 sudo -u ob php /home/ob/www/tools/password_change.php admin $obpass
 
 echo
-echo https://$fqdn/
+
+if [ "$https" == "yes" ]; then
+  echo https://$fqdn/
+else
+  echo http://$fqdn/
+fi
+
 echo Username: admin
 echo Password: $obpass
 echo
