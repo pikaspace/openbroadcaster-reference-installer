@@ -32,12 +32,20 @@ read email
 echo "Here we go!
 "
 
+cd /root
+
 add-apt-repository ppa:ondrej/php -y
 add-apt-repository ppa:ondrej/nginx -y
 apt update
 apt -y upgrade
 
-apt -y install nginx php8.0 php8.0-fpm php8.0-curl php8.0-gd php8.0-mbstring php8.0-mysql php8.0-xml php8.0-imagick php8.0-zip php8.0-bcmath php8.0-intl
+apt -y install npm nginx php8.0 php8.0-fpm php8.0-curl php8.0-gd php8.0-mbstring php8.0-mysql php8.0-xml php8.0-imagick php8.0-zip php8.0-bcmath php8.0-intl
+
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php -r "if (hash_file('sha384', 'composer-setup.php') === '55ce33d7678c5a611085589f1f3ddf8b3c52d662cd01d4ba75c0ee0459970c2200a51f492d557530c71c15d8dba01eae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
+mv composer.phar /usr/local/bin/composer
 
 apt -y install ffmpeg vorbis-tools festival imagemagick
 ln -s /usr/bin/ffmpeg /usr/local/bin/avconv
@@ -108,6 +116,9 @@ systemctl restart nginx
 cd /home/ob/www/
 git clone https://github.com/openbroadcaster/observer.git ./
 git checkout 5.3
+
+/usr/local/bin/composer install -n
+npm install
 
 sqlpass=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)
 obpass=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)
