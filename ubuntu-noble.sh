@@ -130,6 +130,7 @@ php_value[post_max_size] = 1024M
 " > /etc/php/8.3/fpm/pool.d/ob.conf
 
 useradd -m --shell /bin/bash ob
+chgrp www-data /home/ob
 mkdir /home/ob/www/
 
 systemctl restart php8.3-fpm
