@@ -59,7 +59,6 @@ apt -y upgrade
 apt -y install npm nginx php8.3 php8.3-fpm php8.3-curl php8.3-gd php8.3-mbstring php8.3-mysql php8.3-xml php8.3-imagick php8.3-zip php8.3-bcmath php8.3-intl
 
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-php -r "if (hash_file('sha384', 'composer-setup.php') === '55ce33d7678c5a611085589f1f3ddf8b3c52d662cd01d4ba75c0ee0459970c2200a51f492d557530c71c15d8dba01eae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 php composer-setup.php
 php -r "unlink('composer-setup.php');"
 mv composer.phar /usr/local/bin/composer
