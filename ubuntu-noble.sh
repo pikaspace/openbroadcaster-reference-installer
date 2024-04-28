@@ -23,7 +23,7 @@ if [ -n "$local_ips" ]; then
 fi
 
 echo  "
-What is the FQDN or IP? I.e., ob.example.com$local_ips.
+What is the FQDN or IP? E.g. ob.example.com$local_ips.
 Do not include http://, https://, or trailing slash."
 read fqdn
 
