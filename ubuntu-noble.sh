@@ -191,6 +191,7 @@ chown -R ob:ob /home/ob/www
 sudo -u ob /home/ob/www/tools/cli/ob updates run all
 sudo -u ob /home/ob/www/tools/cli/ob passwd admin << EOF
 $obpass
+$obpass
 EOF
 
 echo
