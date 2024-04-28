@@ -14,8 +14,16 @@ This script is in an alpha state and does not validate user inputs or
 command exit codes for success/failure. Things might break.
 "
 
+local_ips=$(ip -o -4 addr show | awk '{print $4}' | cut -d/ -f1 | awk '
+  /^10\./ || /^172\.(1[6-9]|2[0-9]|3[0-1])\./ || /^192\.168\./ {print; exit}
+')
+
+if [ -n "$local_ips" ]; then
+  local_ips=" or $local_ips"
+fi
+
 echo  "
-What is the FQDN or IP? I.e., ob.example.com or 192.168.1.105.
+What is the FQDN or IP? I.e., ob.example.com$local_ips.
 Do not include http://, https://, or trailing slash."
 read fqdn
 
