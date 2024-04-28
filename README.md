@@ -1,11 +1,5 @@
-# OpoenBroadcaster Install Scripts
+# OpenBroadcaster Reference Installer
 
-This is a work in progress (alpha). It may not yet function as expected.
+This installer is meant for a fresh Ubuntu 24.04 LTS install only.
 
-ubuntu-focal.sh is no longer supported.
-
-ubuntu-jammy.sh was never created.
-
-ubuntu-noble.sh is coming soon.
-
-MIT license / use at your own risk.
+MIT license / use at your own risk. See LICENSE for more information.
