@@ -14,16 +14,7 @@ This script is in an alpha state and does not validate user inputs or
 command exit codes for success/failure. Things might break.
 "
 
-read -p "Are you sure you want to do this? Type install: " confirmation
-
-if [ "$confirmation" != "install" ]; then
-  echo "
-Okay, quitting.
-"
-  exit;
-fi
-
-echo  "What is the FQDN? I.e., ob.example.com. Do not include http://, https://, or trailing slash."
+echo  "What is the FQDN or IP? I.e., ob.example.com or 192.168.1.105. Do not include http://, https://, or trailing slash."
 read fqdn
 
 echo  "What email address should OpenBroadcaster emails come from?"
@@ -46,8 +37,17 @@ if [ "$https" == "yes" ]; then
   read certemail
 fi;
 
-echo "Here we go!
-"
+while true; do
+  read -p "Everything look right? Type install: " confirmation
+
+  if [ "$confirmation" = "install" ]; then
+    echo "Installation proceeding..."
+    echo
+    break
+  else
+    echo "Please type 'install' to proceed."
+  fi
+done
 
 cd /root
 
