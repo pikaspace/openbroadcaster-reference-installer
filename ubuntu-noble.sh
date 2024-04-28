@@ -186,8 +186,10 @@ mkdir /home/ob/www/assets/uploads
 chown -R ob:ob /home/ob/files
 chown -R ob:ob /home/ob/www
 
-sudo -u ob php /home/ob/www/updates/index.php run
-sudo -u ob php /home/ob/www/tools/password_change.php admin $obpass
+sudo -u ob /home/ob/www/tools/cli/ob updates run all
+sudo -u ob /home/ob/www/tools/cli/ob passwd admin << EOF
+$obpass
+EOF
 
 echo
 
