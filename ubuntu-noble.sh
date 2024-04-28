@@ -6,7 +6,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 echo "
-This script is designed to be run on a fresh Ubuntu Server 20.04 installation.
+This script is designed to be run on a fresh Ubuntu Server 24.04 installation.
 Running on an existing installation or different operating system / release may
 provide unexpected results.
 
@@ -56,7 +56,7 @@ add-apt-repository ppa:ondrej/nginx -y
 apt update
 apt -y upgrade
 
-apt -y install npm nginx php8.0 php8.0-fpm php8.0-curl php8.0-gd php8.0-mbstring php8.0-mysql php8.0-xml php8.0-imagick php8.0-zip php8.0-bcmath php8.0-intl
+apt -y install npm nginx php8.3 php8.3-fpm php8.3-curl php8.3-gd php8.3-mbstring php8.3-mysql php8.3-xml php8.3-imagick php8.3-zip php8.3-bcmath php8.3-intl
 
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 php -r "if (hash_file('sha384', 'composer-setup.php') === '55ce33d7678c5a611085589f1f3ddf8b3c52d662cd01d4ba75c0ee0459970c2200a51f492d557530c71c15d8dba01eae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
@@ -77,7 +77,7 @@ fi;
 
 systemctl enable nginx
 rm /etc/nginx/sites-enabled/default
-rm /etc/php/8.0/fpm/pool.d/www.conf
+rm /etc/php/8.3/fpm/pool.d/www.conf
 
 apt -y install mariadb-server
 mysql_secure_installation << EOF
@@ -108,7 +108,7 @@ echo "server {
 
   location ~ \.php$ {
     include snippets/fastcgi-php.conf;
-    fastcgi_pass unix:/var/run/php/php8.0-ob-fpm.sock;
+    fastcgi_pass unix:/var/run/php/php8.3-ob-fpm.sock;
   }
 }" > /etc/nginx/sites-available/ob
 
@@ -118,7 +118,7 @@ echo "
 [ob]
 user = ob
 group = ob
-listen = /var/run/php/php8.0-ob-fpm.sock
+listen = /var/run/php/php8.3-ob-fpm.sock
 listen.owner = www-data
 listen.group = www-data
 pm = dynamic
@@ -128,12 +128,12 @@ pm.min_spare_servers = 1
 pm.max_spare_servers = 3
 php_value[upload_max_filesize] = 1024M
 php_value[post_max_size] = 1024M
-" > /etc/php/8.0/fpm/pool.d/ob.conf
+" > /etc/php/8.3/fpm/pool.d/ob.conf
 
 useradd -m --shell /bin/bash ob
 mkdir /home/ob/www/
 
-systemctl restart php8.0-fpm
+systemctl restart php8.3-fpm
 systemctl restart nginx
 
 if [ "$https" == "yes" ]; then
