@@ -165,6 +165,7 @@ define('OB_MEDIA','/home/ob/files/media');
 define('OB_MEDIA_UPLOADS','/home/ob/files/media/uploads');
 define('OB_MEDIA_ARCHIVE','/home/ob/files/media/archive');
 define('OB_CACHE','/home/ob/files/cache');
+define('OB_THUMBNAILS', '/home/ob/files/thumbnails');
 define('OB_EMAIL_REPLY','$email'); // emails to users come from this address
 define('OB_EMAIL_FROM','OpenBroadcaster'); // emails to users come from this name
 " > /home/ob/www/config.php
@@ -180,6 +181,7 @@ mkdir /home/ob/files/media
 mkdir /home/ob/files/media/uploads
 mkdir /home/ob/files/media/archive
 mkdir /home/ob/files/cache
+mkdir /home/ob/files/thumbnails
 mkdir /home/ob/www/assets
 mkdir /home/ob/www/assets/uploads
 chown -R ob:ob /home/ob/files
