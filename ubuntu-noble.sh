@@ -14,8 +14,8 @@ This script is in an alpha state and does not validate user inputs or
 command exit codes for success/failure. Things might break.
 "
 
-echo  
-"What is the FQDN or IP? I.e., ob.example.com or 192.168.1.105.
+echo  "
+What is the FQDN or IP? I.e., ob.example.com or 192.168.1.105.
 Do not include http://, https://, or trailing slash."
 read fqdn
 
