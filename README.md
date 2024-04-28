@@ -1,6 +1,6 @@
 # OpoenBroadcaster Install Scripts
 
-This is a work in progress (alpha) and currently may function as intended.
+This is a work in progress (alpha). It may not yet function as expected.
 
 ubuntu-focal.sh is no longer supported.
 
