@@ -50,4 +50,8 @@ git clone https://github.com/openbroadcaster/obplayer/ /usr/local/lib/obplayer
 cd /usr/local/lib/obplayer
 git checkout 5.3-staging
 
+echo "
+Install complete. Run obplayer from /usr/local/lib/obplayer/.
+"
+
 # TODO download some fallback media, set default streaming configuration
