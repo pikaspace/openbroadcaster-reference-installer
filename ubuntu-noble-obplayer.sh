@@ -33,9 +33,10 @@ cd /root
 apt update
 apt -y upgrade
 
+# TODO is there a way to pre/auto-accept font EULA?
 apt -y install ntp python3 python3-pycurl python3-openssl python3-apsw python3-magic python3-dateutil python3-requests python3-gi python3-gi-cairo gir1.2-gtk-3.0 gir1.2-gdkpixbuf-2.0 gir1.2-pango-1.0 python3-gst-1.0 gir1.2-gstreamer-1.0 gir1.2-gst-plugins-base-1.0 gir1.2-gst-rtsp-server-1.0 gstreamer1.0-tools gstreamer1.0-libav gstreamer1.0-alsa gstreamer1.0-pulseaudio gstreamer1.0-pipewire gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly ffmpeg ubuntu-restricted-addons ubuntu-restricted-extras gstreamer1.0-vaapi mesa-vdpau-drivers espeak mbrola mbrola-en1 mbrola-us1 mbrola-us2 mbrola-us3 mbrola-fr1 mbrola-fr4 python3-serial python3-pip git python3-boto3 python3-pulsectl python3-inotify libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gtk-doc-tools meson
 
-# TODO install icecast with a default configuration
+# TODO install icecast with a default configuration (is there a way to auto-configure instead of interactive?)
 
 # pyrtlsdr not available as python3-pyrtlsdr, but its use is commented out in code so no longer needed?
 
@@ -54,4 +55,4 @@ echo "
 Install complete. Run obplayer from /usr/local/lib/obplayer/.
 "
 
-# TODO download some fallback media, set default streaming configuration
+# TODO download some fallback media, set default streaming configuration (need to add something to player to init settings / set setting from command line?
